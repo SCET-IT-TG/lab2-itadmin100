@@ -61,7 +61,7 @@ db.students.insertOne({
     semester: 7
 });
 
-// ---------------------------------------------------------
+// --- ------------------------------------------------------
 // Exercise 7: Multiple Inserts
 // ---------------------------------------------------------
 // (We have already inserted 4 students above, satisfying the >3 requirement)
