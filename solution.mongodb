@@ -1,85 +1,93 @@
-// Switch to the correct database without using the 'use' command
-db = db.getSiblingDB("examDB");
+/* -------------------------------------------------
+   Switch to Database (Script-safe)
+------------------------------------------------- */
 
-// ---------------------------------------------------------
-// Exercise 1: Database & Collection Creation
-// ---------------------------------------------------------
-// Inserting data automatically creates the 'students' collection
-db.students.insertOne({
-    name: "Aarav Patel",
+db = db.getSiblingDB("companyDB");
+
+/* -------------------------------------------------
+   Exercise 1: Data Setup (Insert 5 Documents)
+------------------------------------------------- */
+// Inserting required data for queries to work correctly
+// Includes "Rahul", "IT" department, and varied salaries/ages
+
+db.employees.insertMany([
+  {
+    name: "Rahul",
     department: "IT",
-    semester: 3
-});
-
-db.students.insertOne({
-    name: "Vivaan Shah",
-    department: "CE",
-    semester: 5
-});
-
-// ---------------------------------------------------------
-// Exercise 2: Insert Document with Multiple Fields
-// ---------------------------------------------------------
-// Must include: name, department, semester, mobile
-db.students.insertOne({
-    name: "Diya Mehra",
-    department: "ICT",
-    semester: 1,
-    mobile: "9876543210"
-});
-
-// ---------------------------------------------------------
-// Exercise 3: Array of Simple Values
-// ---------------------------------------------------------
-// Creating 'subjects' collection with an array
-db.subjects.insertOne({
-    course_name: "B.Tech Computer Science",
-    subject_list: ["Data Structures", "Operating Systems", "Java Programming", "Mathematics"]
-});
-
-// ---------------------------------------------------------
-// Exercise 4: Array of Objects
-// ---------------------------------------------------------
-// Creating 'faculty' collection with array of objects
-db.faculty.insertOne({
-    department: "Computer Engineering",
-    teachers: [
-        { name: "Prof. Tushar Gohil", experience: 15 },
-        { name: "Prof. Sneha Gupta", experience: 8 },
-        { name: "Prof. Rajesh Kumar", experience: 12 }
-    ]
-});
-
-// ---------------------------------------------------------
-// Exercise 5: Explicit Primary Key
-// ---------------------------------------------------------
-// Using ObjectId() explicitly
-db.students.insertOne({
-    _id: ObjectId(),
-    name: "Ishaan Verma",
+    salary: 60000,
+    age: 25
+  },
+  {
+    name: "Amit Verma",
+    department: "HR",
+    salary: 25000,
+    age: 40
+  },
+  {
+    name: "Sneha Patil",
     department: "IT",
-    semester: 7
-});
+    salary: 90000,
+    age: 29
+  },
+  {
+    name: "Vikram Singh",
+    department: "Sales",
+    salary: 45000,
+    age: 35
+  },
+  {
+    name: "Priya Shah",
+    department: "HR",
+    salary: 55000,
+    age: 24
+  }
+]);
 
-// --- ------------------------------------------------------
-// Exercise 7: Multiple Inserts
-// ---------------------------------------------------------
-// (We have already inserted 4 students above, satisfying the >3 requirement)
+/* -------------------------------------------------
+   Exercise 2: Simple Find Queries
+------------------------------------------------- */
 
-// ---------------------------------------------------------
-// Exercise 6: Duplicate Primary Key Observation
-// ---------------------------------------------------------
-// This section is placed last because the second command WILL FAIL.
-// This demonstrates the unique constraint of the _id field.
+// Find all employees belonging to the "IT" department
+db.employees.find({ department: "IT" });
 
-// 1. Insert first document with manual _id
-db.students.insertOne({
-    _id: 1001,
-    name: "Unique Student"
-});
+// Find the employee with the name "Rahul"
+db.employees.find({ name: "Rahul" });
 
-// 2. Attempt to insert duplicate _id (This triggers the expected error)
-db.students.insertOne({
-    _id: 1001,
-    name: "Duplicate Student"
+/* -------------------------------------------------
+   Exercise 3: Formatting & Distinct
+------------------------------------------------- */
+
+// Display all employees using pretty()
+db.employees.find().pretty();
+
+// Find all unique departments
+db.employees.distinct("department");
+
+/* -------------------------------------------------
+   Exercise 4: Salary Analysis ($gt, $lt)
+------------------------------------------------- */
+
+// Find employees with salary greater than 50000
+db.employees.find({ salary: { $gt: 50000 } });
+
+// Find employees with salary less than 30000
+db.employees.find({ salary: { $lt: 30000 } });
+
+/* -------------------------------------------------
+   Exercise 5: Age Filtering ($gte, $lte)
+------------------------------------------------- */
+
+// Find employees whose age is greater than or equal to 30
+db.employees.find({ age: { $gte: 30 } });
+
+// Find employees whose age is less than or equal to 25
+db.employees.find({ age: { $lte: 25 } });
+
+/* -------------------------------------------------
+   Exercise 6: Range Queries
+------------------------------------------------- */
+
+// Find employees with salary between 40000 and 80000 (inclusive)
+db.employees.find({
+  salary: { $gte: 40000, $lte: 80000 }
 });
